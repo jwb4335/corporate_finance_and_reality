@@ -1,0 +1,414 @@
+-------------------------------------------------------------------------------------
+      name:  Table_A8I
+       log:  C:\Users\barry\Dropbox\Graham_Survey\March_2019_Survey\survey_code\pytho
+> n_code\Functions_v3\Submission\Lintner_Regressions.txt
+  log type:  text
+ opened on:  12 Jan 2022, 12:27:47
+
+. 
+. version 16
+
+. 
+. /* Code to run regressions for Table A8.I of Corporate Finance and Reality
+>  - See caption of Table A8.I for full description of methodology
+> */
+. 
+. * lintner's model
+. *I follow Brav, Graham, Harvey & Michealy (2005) Table 7 for regression; and have M
+> ark's SAS code for reference
+. 
+. clear all
+
+. set more off
+
+. 
+. 
+. **edited by Joy 2018-10
+. **edited by John Barry 2021-12
+. 
+. timer on 1
+
+. ///////////////////////////////////////////////////////////////////
+> *1. compustat data: 1950-2020, all firms
+. import delimited Data/lintner_data.csv,clear
+(8 vars, 534,497 obs)
+
+. keep gvkey fyear adrr indfmt fic ajex dvpsx_f epspx 
+
+. 
+. 
+. 
+. *epspx: earning per share (basic) excluding extra items
+. *epsfx: earning per share (dilute) excluding extra items
+. *dvpsx_f: dividend per share-ex-date-fiscal
+. 
+. destring gvkey,replace
+gvkey already numeric; no replace
+
+. drop if fyear==2021
+(84 observations deleted)
+
+. 
+. *drop foreign firms
+. bysort gvkey: egen adrrr=max(adrr)
+(516,943 missing values generated)
+
+. drop if adrrr!=.
+(17,470 observations deleted)
+
+. drop if fic!="USA"
+(74,348 observations deleted)
+
+. 
+. duplicates tag gvkey fyear, gen(i)
+
+Duplicates in terms of gvkey fyear
+
+. drop if indfmt=="FS" & i>0
+(0 observations deleted)
+
+. drop if fyear==.
+(88 observations deleted)
+
+. duplicates drop gvkey fyear, force
+
+Duplicates in terms of gvkey fyear
+
+(2 observations deleted)
+
+. 
+. *******
+. xtset gvkey fyear
+       panel variable:  gvkey (unbalanced)
+        time variable:  fyear, 1950 to 2020, but with gaps
+                delta:  1 unit
+
+. *winsor2 dvpsx_f epspx, replace by(fyear)
+. 
+. *adjustment factor
+. gen lagAdjFac=l1.ajex
+(32,810 missing values generated)
+
+. gen AdjFac=ajex
+(12 missing values generated)
+
+. gen div_pershare=dvpsx_f*(lagAdjFac/AdjFac)
+(56,127 missing values generated)
+
+. gen earning_pershare=epspx*(lagAdjFac/AdjFac)
+(100,400 missing values generated)
+
+. 
+. *important, lag div_share is NOT adjusted
+. gen l1_div_pershare=l1.dvpsx_f
+(65,667 missing values generated)
+
+. gen diff_div=div_pershare-l1_div_pershare
+(66,589 missing values generated)
+
+. 
+. gen DE_ratio=div_pershare/earning_pershare
+(113,028 missing values generated)
+
+. 
+. *to get rid of missing values, we only keep the ones with entire series
+. gen p=(!missing(l1_div_pershare))
+
+. gen q=(!missing(earning_pershare))
+
+. gen o=(!missing(diff_div))
+
+. 
+. 
+. *******************************************
+. 
+. 
+. 
+. foreach num of numlist 1/4 {
+  2. 
+. preserve
+  3. 
+. if `num'==1 {
+  4. local firstyear 1950
+  5. local lastyear 1964
+  6. local totalyear=`lastyear'-`firstyear'-1
+  7. }
+  8. if `num'==2 {
+  9. local firstyear 1965
+ 10. local lastyear 1983
+ 11. local totalyear=`lastyear'-`firstyear'
+ 12. }
+ 13. if `num'==3 {
+ 14. local firstyear 1984
+ 15. local lastyear 2002
+ 16. local totalyear=`lastyear'-`firstyear'
+ 17. }
+ 18. if `num'==4 {
+ 19. local firstyear 2003
+ 20. local lastyear 2020
+ 21. local totalyear=`lastyear'-`firstyear'
+ 22. }
+ 23. 
+. 
+. 
+. keep if fyear<=`lastyear' & fyear>=`firstyear'
+ 24. 
+. by gvkey: egen pp=total(p)
+ 25. by gvkey: egen qq=total(q)
+ 26. by gvkey: egen oo=total(o)
+ 27. drop if pp<`totalyear' | qq<`totalyear' |oo<`totalyear'
+ 28. ** Dataset needs to be saved to run statsby
+. tempfile hold 
+ 29. save `hold'
+ 30. statsby _b e(r2_a), by(gvkey): reg diff_div l1_div_pershare earning_pershare
+ 31. 
+. gen period = ""
+ 32. replace period = "`firstyear'-`lastyear'"
+ 33. order period
+ 34. 
+. tempfile myparms_`num'
+ 35. save `myparms_`num''
+ 36. 
+. restore
+ 37. 
+. }
+(422,096 observations deleted)
+(12,366 observations deleted)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_000002.tmp saved
+(running regress on estimation sample)
+
+      command:  regress diff_div l1_div_pershare earning_pershare
+  _eq2_stat_1:  e(r2_a)
+           by:  gvkey
+
+Statsby groups
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+..................................................   450
+..................................................   500
+.......................................
+(539 missing values generated)
+variable period was str1 now str9
+(539 real changes made)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_000003.tmp saved
+(342,018 observations deleted)
+(68,744 observations deleted)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_000005.tmp saved
+(running regress on estimation sample)
+
+      command:  regress diff_div l1_div_pershare earning_pershare
+  _eq2_stat_1:  e(r2_a)
+           by:  gvkey
+
+Statsby groups
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+..................................................   450
+..................................................   500
+..................................................   550
+..................................................   600
+..................................................   650
+..................................................   700
+..................................................   750
+..................................................   800
+..................................................   850
+..................................................   900
+..................................................   950
+..................................................  1000
+..................................................  1050
+..................................................  1100
+..................................................  1150
+..................................................  1200
+..................................................  1250
+..................................................  1300
+..................................................  1350
+..................................................  1400
+..................................................  1450
+..................................................  1500
+..................................................  1550
+..................................................  1600
+..................................................  1650
+........................
+(1,674 missing values generated)
+variable period was str1 now str9
+(1,674 real changes made)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_000006.tmp saved
+(266,426 observations deleted)
+(141,263 observations deleted)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_000008.tmp saved
+(running regress on estimation sample)
+
+      command:  regress diff_div l1_div_pershare earning_pershare
+  _eq2_stat_1:  e(r2_a)
+           by:  gvkey
+
+Statsby groups
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+..................................................   450
+..................................................   500
+..................................................   550
+..................................................   600
+..................................................   650
+..................................................   700
+..................................................   750
+..................................................   800
+..................................................   850
+..................................................   900
+..................................................   950
+..................................................  1000
+..................................................  1050
+..................................................  1100
+..................................................  1150
+..................................................  1200
+..................................................  1250
+..................................................  1300
+..................................................  1350
+..................................................  1400
+..................................................  1450
+..................................................  1500
+..................................................  1550
+..................................................  1600
+..................................................  1650
+..................................................  1700
+..................................................  1750
+..................................................  1800
+.....................................
+(1,837 missing values generated)
+variable period was str1 now str9
+(1,837 real changes made)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_000009.tmp saved
+(296,975 observations deleted)
+(107,018 observations deleted)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_00000b.tmp saved
+(running regress on estimation sample)
+
+      command:  regress diff_div l1_div_pershare earning_pershare
+  _eq2_stat_1:  e(r2_a)
+           by:  gvkey
+
+Statsby groups
+----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+..................................................   450
+..................................................   500
+..................................................   550
+..................................................   600
+..................................................   650
+..................................................   700
+..................................................   750
+..................................................   800
+..................................................   850
+..................................................   900
+..................................................   950
+..................................................  1000
+..................................................  1050
+..................................................  1100
+..................................................  1150
+..................................................  1200
+..................................................  1250
+..................................................  1300
+..................................................  1350
+..................................................  1400
+..................................................  1450
+..................................................  1500
+..................................................  1550
+..................................................  1600
+..................................................  1650
+..................................................  1700
+..................................................  1750
+..................................................  1800
+..................................................  1850
+..................................................  1900
+..................................................  1950
+..................................................  2000
+..................................................  2050
+..................................................  2100
+.............................................
+(2,145 missing values generated)
+variable period was str1 now str9
+(2,145 real changes made)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_00000c.tmp saved
+
+. 
+. 
+. foreach num of numlist 1/4{
+  2. use  `myparms_`num'',clear
+  3. rename _eq2_stat_1 R2
+  4. rename _b_l1_div_pershare beta_ldps
+  5. rename _b_earning_pershare beta_eps
+  6. rename _b_cons beta_cons
+  7. keep gvkey  beta* R2 period
+  8. 
+. gen TP=-beta_eps/beta_ldps
+  9. gen SOA=-beta_ldps
+ 10. 
+. winsor2 TP SOA R2, replace cuts(1 99) trim
+ 11. 
+. order period
+ 12. gen index=`num'
+ 13. tempfile temp_`num'
+ 14. save `temp_`num''
+ 15. }
+(statsby: regress)
+(8 missing values generated)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_00000d.tmp saved
+(statsby: regress)
+(108 missing values generated)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_00000e.tmp saved
+(statsby: regress)
+(614 missing values generated)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_00000f.tmp saved
+(statsby: regress)
+(673 missing values generated)
+file C:\Users\barry\AppData\Local\Temp\ST_1d8c_00000g.tmp saved
+
+. 
+. 
+. use `temp_1',clear
+(statsby: regress)
+
+. foreach num of numlist 2/4{
+  2. 
+. append using `temp_`num''
+  3. }
+
+. export delimited using "Data/SOA_regressions.csv", replace 
+file Data/SOA_regressions.csv saved
+
+. 
+. log close Table_A8I
+      name:  Table_A8I
+       log:  C:\Users\barry\Dropbox\Graham_Survey\March_2019_Survey\survey_code\pytho
+> n_code\Functions_v3\Submission\Lintner_Regressions.txt
+  log type:  text
+ closed on:  12 Jan 2022, 12:28:46
+-------------------------------------------------------------------------------------
