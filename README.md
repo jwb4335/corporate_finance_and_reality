@@ -24,3 +24,5 @@ The results here were created using off-the-shelf Anaconda and should run via an
 There are two user-written functions, winsor.py and stacked_bar.py, located in the subfolder Functions, which are needed to produce the results.
 
 Lastly, results for Table A8.I were produced using Stata Version 16. See "Code/Lintner_Regressions.txt" for details. 
+
+The data used to produce the results in the paper is nearly all proprietary, so is thus not included. 
