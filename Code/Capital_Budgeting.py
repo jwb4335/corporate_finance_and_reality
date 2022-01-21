@@ -1,4 +1,8 @@
-
+"""
+Code to produce Figure 2, Table I
+John Barry
+2022/01/14
+"""
 import pandas as pd
 import numpy as np
 import pickle
@@ -6,12 +10,6 @@ import matplotlib.pyplot as plt
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
-# # Set the directories
-# if "barry" in os.getcwd():
-#     os.chdir("C:\\Users\\barry\\Dropbox\\Graham_survey\\March_2019_Survey\\survey_code\\python_code\\Functions_v3\\Submission\\")
-#     cwd = os.getcwd()
-#     sys.path.append(os.path.join(cwd,))
-#     table_save = 'C:\\Users\\barry\\Dropbox\\Graham_Survey\\March_2019_Survey\\graph_data\\tables_for_writeup_march21.xlsx'
 
 ## Load in the survey data
 filename = 'Data/datafile.pkl'

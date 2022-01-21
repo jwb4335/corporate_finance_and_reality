@@ -1,4 +1,8 @@
-
+"""
+Code to produce Figure A7.3
+John Barry
+2022/01/14
+"""
 import pandas as pd
 import numpy as np
 import pickle
@@ -14,7 +18,7 @@ sdata['all'] = 'All'
 sdata_2001['Size'] = sdata_2001['large'].map({0:'Small',1:'Large*'})
 
 
-#%%
+#%% Figure A7.3
 
 def ext_fund_type(sdata,byvar):
     

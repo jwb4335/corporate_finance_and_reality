@@ -1,18 +1,8 @@
 """
-Created on Sat Jan  8 12:59:50 2022
-
-jwb
+Code to produce Figure 1, Figure A2.1, Table A2.1
+John Barry
+2022/01/14
 """
-
-
-"""
-Created on Sat Jan  8 12:27:19 2022
-
-jwb
-"""
-
-
-
 import pandas as pd
 import numpy as np
 import pickle
@@ -34,7 +24,7 @@ with open(filename, 'rb') as f:
 
 
 
-#%%
+#%% Figure 1 and Figure A2.1
 
 def demo_counts(sdata,demo_var,rename = None):
     

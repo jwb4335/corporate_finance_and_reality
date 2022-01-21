@@ -1,4 +1,8 @@
-
+"""
+Code to produce Figure 17, Table 8
+John Barry
+2022/01/14
+"""
 import pandas as pd
 import numpy as np
 import pickle

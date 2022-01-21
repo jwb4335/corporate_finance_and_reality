@@ -1,3 +1,8 @@
+"""
+Code to produce Figure 22, Figure 23
+John Barry
+2022/01/14
+"""
 import pandas as pd
 import numpy as np
 import pickle
@@ -8,14 +13,6 @@ filename = 'Data/stk_interests.pkl'
 with open(filename, 'rb') as f:
     [stk_interest,other_stk] = pickle.load(f)
     f.close()
-
-# filename = 'C:/Users/barry/Dropbox/graham_survey/March_2019_survey/survey_code/python_code/functions_v3/Submission/Data/stk_interests.pkl'
-# with open(filename, 'wb') as f:
-#     pickle.dump([stk_interest,other_stk],f)
-#     f.close()
-
-
-
 
 
 

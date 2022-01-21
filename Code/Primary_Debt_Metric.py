@@ -1,16 +1,13 @@
-
+"""
+Code to produce Figure 13, Table IV
+John Barry
+2022/01/14
+"""
 import pandas as pd
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 import copy
-
-# # Set the directories
-# if "barry" in os.getcwd():
-#     os.chdir("C:\\Users\\barry\\Dropbox\\Graham_survey\\March_2019_Survey\\survey_code\\python_code\\Functions_v3\\Submission\\")
-#     cwd = os.getcwd()
-#     sys.path.append(os.path.join(cwd,))
-#     table_save = 'C:\\Users\\barry\\Dropbox\\Graham_Survey\\March_2019_Survey\\graph_data\\tables_for_writeup_march21.xlsx'
 
 ## Load in the survey data
 filename = 'Data/datafile.pkl'
@@ -184,8 +181,7 @@ def pdm_demo_tests(pdm,sdata,demo_var,var_sort = None):
 
         if len(reg_df[demo_var].unique().tolist()) == 1:
             p = 1
-        # contingency = pd.crosstab(pdm[demo_var],pdm[col])
-        # c, p, dof, expected = chi2_contingency(contingency) 
+
         
        
         hold = round(pdm.groupby(demo_var)[col].mean().to_frame().T,2)

@@ -1,14 +1,9 @@
-
+"""
+Code to produce Table A8.I
+John Barry
+2022/01/14
+"""
 import pandas as pd
-
-
-# # Set the directories
-# if "barry" in os.getcwd():
-#     os.chdir("C:\\Users\\barry\\Dropbox\\Graham_survey\\March_2019_Survey\\survey_code\\python_code\\Functions_v3\\Submission\\")
-#     cwd = os.getcwd()
-#     sys.path.append(os.path.join(cwd,))
-#     table_save = 'C:\\Users\\barry\\Dropbox\\Graham_Survey\\March_2019_Survey\\graph_data\\tables_for_writeup_march21.xlsx'
-
 
 
 reg_data = pd.read_csv("Data/SOA_regressions.csv")
