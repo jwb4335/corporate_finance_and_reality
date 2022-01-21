@@ -1,7 +1,7 @@
 # corporate_finance_and_reality
 Codes for "Corporate Finance and Reality" by John R. Graham
 
-This repo displays all of the results presented in "Corporate Finance and Reality" by John R. Graham.
+This repo has all code and displays results presented in "Corporate Finance and Reality" by John R. Graham.
 
 "Main.ipynb" displays all results. Results are displayed in order of section. Results from appendices connected to each section are also displayed. For example, Section I displays figures/tables from Section I in the text and from Appendix A2.
 
