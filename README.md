@@ -25,4 +25,4 @@ There are two user-written functions, winsor.py and stacked_bar.py, located in t
 
 Lastly, results for Table A8.I were produced using Stata Version 16. See "Code/Lintner_Regressions.txt" for details. 
 
-The data used to produce the results in the paper are nearly all proprietary, so is thus not included. 
+The data used to produce the results in the paper are nearly all proprietary, so are thus not included. 
