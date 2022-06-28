@@ -1,5 +1,5 @@
 # corporate_finance_and_reality
-Codes for [Corporate Finance and Reality](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3994848) by John R. Graham
+Codes for Corporate Finance and Reality ([published version](https://onlinelibrary.wiley.com/doi/full/10.1111/jofi.13161); [SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3994848)) by John R. Graham
 
 This repo has all code and displays results presented in "Corporate Finance and Reality" by John R. Graham.
 
